@@ -1,25 +1,27 @@
-import {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
-
-type Page = {
-  lines: Array<{id: string; text: string}>;
-};
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import type { FetchedPage } from "../types/Page";
+import axios from "axios";
 
 export function AnswerPage(): JSX.Element {
-  const {pageTitle} = useParams();
+  const { pageTitle } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [lines, setLines] = useState<Array<{id: string; text: string}>>([]);
+  const [lines, setLines] = useState<FetchedPage["descriptions"]>([]);
+  console.log(lines)
   useEffect(() => {
     (async () => {
-      const res = await fetch(`/api/pages/${pageTitle}`);
-      const page = (await res.json()) as Page;
-      const lines = page.lines
-        // exclude the first line because it's the page title.
-        .slice(1)
-        // exclude lines that start with "? " because they are texts for questions.
-        .filter(line => !line.text.startsWith("? "));
-      setLines(lines);
-      setIsLoading(false);
+      axios
+        .get<FetchedPage>(`https://faq-odoshari-api.onrender.com/api/pages/${pageTitle}`)
+        .then((results) => {
+          const resPage = results.data;
+          const lines = resPage.descriptions;
+          setLines(lines);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
     })();
   }, [pageTitle]);
 
@@ -36,9 +38,9 @@ export function AnswerPage(): JSX.Element {
           {pageTitle}
         </h1>
         <div>
-          {lines.map(line => (
-            <div key={line.id}>
-              {line.text}
+          {lines.map((line, index) => (
+            <div key={index}>
+              {line}
             </div>
           ))}
         </div>
