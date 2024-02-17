@@ -64,6 +64,32 @@ const convertPageToFaqs = async (
     `https://scrapbox.io/api/pages/${projectName}/${pageTitle}`,
   );
   const page = (await res.json()) as Page;
+
+  const spreadFaq = (question: string): string[] => {
+    if (!question.includes("(")) return [question];
+
+    const [startText, ...sections] = question.split("(");
+
+    const sectoinsWithSelection = sections.map(section => {
+      const [selectionGroup, endText] = section.split(")");
+      const selections = selectionGroup.split("|");
+      return selections.map(section => section + endText);
+    });
+    let faqs: string[] = sectoinsWithSelection[0].map(
+      firstSelection => startText + firstSelection,
+    );
+    for (let i = 1; i < sectoinsWithSelection.length; i++) {
+      const nextFaqs: string[] = [];
+      faqs.forEach(faq =>
+        sectoinsWithSelection[i].forEach(selection =>
+          nextFaqs.push(faq + selection),
+        ),
+      );
+      faqs = nextFaqs;
+    }
+    return faqs;
+  };
+
   const faqs = page.lines
     // exclude first line because it is page title.
     .slice(1)
@@ -72,9 +98,11 @@ const convertPageToFaqs = async (
     // remove prefix of question text.
     .map(line => line.text.replace(QUESTION_TEXT_PREFIX, ""))
     // convert to FAQ.
-    .map(question => {
-      return {question, pageTitle};
+    .flatMap(question => {
+      const questions = spreadFaq(question);
+      return questions.map(q => ({question: q, pageTitle}));
     });
+
   return faqs;
 };
 
