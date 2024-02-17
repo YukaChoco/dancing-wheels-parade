@@ -65,29 +65,38 @@ const convertPageToFaqs = async (
   );
   const page = (await res.json()) as Page;
 
-  const spreadFaq = (question: string): string[] => {
-    if (!question.includes("(")) return [question];
+  const generateCombinations = (optionsList: string[][]): string[][] => {
+    let combinations: string[][] = [[]];
 
-    const [startText, ...sections] = question.split("(");
-
-    const sectoinsWithSelection = sections.map(section => {
-      const [selectionGroup, endText] = section.split(")");
-      const selections = selectionGroup.split("|");
-      return selections.map(section => section + endText);
-    });
-    let faqs: string[] = sectoinsWithSelection[0].map(
-      firstSelection => startText + firstSelection,
-    );
-    for (let i = 1; i < sectoinsWithSelection.length; i++) {
-      const nextFaqs: string[] = [];
-      faqs.forEach(faq =>
-        sectoinsWithSelection[i].forEach(selection =>
-          nextFaqs.push(faq + selection),
-        ),
-      );
-      faqs = nextFaqs;
+    for (const options of optionsList) {
+      const temp: string[][] = [];
+      for (const combination of combinations) {
+        for (const option of options) {
+          temp.push(combination.concat(option));
+        }
+      }
+      combinations = temp;
     }
-    return faqs;
+
+    return combinations;
+  };
+
+  const spreadFaq = (question: string): string[] => {
+    const matches = question.matchAll(/\((.+?)\)/g);
+    const optionsList: string[][] = [];
+    for (const match of matches) {
+      optionsList.push(match[1].split("|"));
+    }
+
+    const combinations = generateCombinations(optionsList);
+
+    return combinations.map(combination => {
+      let result = question;
+      for (const option of combination) {
+        result = result.replace(/\((.+?)\)/, option);
+      }
+      return result;
+    });
   };
 
   const faqs = page.lines
