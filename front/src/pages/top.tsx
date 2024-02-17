@@ -5,7 +5,7 @@ import { Button } from "../components/Button";
 import { ResultCard } from "../components/ResultCard";
 import { LoadingModal } from "../components/LoadingModal";
 import type { FAQ, FetchedFAQs } from "../types/FAQ";
-import axios from "axios";
+import axios from 'axios';
 
 export function TopPage(): JSX.Element {
   const [input, setInput] = useState("");

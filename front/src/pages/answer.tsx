@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { FetchedPage } from "../types/Page";
-import axios from "axios";
+import axios from 'axios';
 
 export function AnswerPage(): JSX.Element {
   const { pageTitle } = useParams();
