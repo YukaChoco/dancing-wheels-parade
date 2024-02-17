@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import wanko from "@/assets/wanko.svg";
-import prompt from "@/assets/prompt.svg";
 
 type FAQ = {
   question: string;
@@ -48,10 +47,6 @@ export function TopPage(): JSX.Element {
         <div>
           <div>
             <img src={wanko} alt="wanko" />
-            <img
-              src={prompt}
-              alt="prompt"
-            />
           </div>
         </div>
         <div>
