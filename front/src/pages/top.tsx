@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import wanko from "@/assets/wanko.svg";
+import { Button } from "../components/Button";
 
 type FAQ = {
   question: string;
@@ -59,6 +60,7 @@ export function TopPage(): JSX.Element {
           />
         </div>
       </div>
+      <Button theme="primary">Button</Button>
       <div>
         {input === "" ? (
           <>
