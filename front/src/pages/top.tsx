@@ -76,7 +76,7 @@ export function TopPage(): JSX.Element {
                 <ResultCard
                   key={faq.question}
                   to={`/pages/${faq.pageTitle}`}
-                  question={faq.question}
+                  faq={faq}
                 />
               ))}
             </ul>
