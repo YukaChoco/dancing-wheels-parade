@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import body from "@/assets/body.svg";
 import hand from "@/assets/hand.svg";
-import { Button } from "../components/Button";
 import { ResultCard } from "../components/ResultCard";
 import { LoadingModal } from "../components/LoadingModal";
+import { Button } from "../components/Button";
 
 type FAQ = {
   question: string;
@@ -16,6 +15,7 @@ export function TopPage(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [defaultFaqs, setDefaultFaqs] = useState<FAQ[]>([]);
+  const similarWord: string | null = null;
 
   useEffect(() => {
     (async () => {
@@ -62,15 +62,10 @@ export function TopPage(): JSX.Element {
           />
         </div>
       </div>
-      <div className="mt-4">
-        <Button theme="primary">Button</Button>
-      </div>
-      <div>
+      <div className="mt-6">
         {input === "" ? (
           <>
-            <span>
-              Frequently Asked Questions
-            </span>
+            <span>よくある質問</span>
             <ul>
               {defaultFaqs.map(faq => (
                 <ResultCard
@@ -83,24 +78,27 @@ export function TopPage(): JSX.Element {
           </>
         ) : (
           <>
-            <span>{`${faqs.length} questions matched`}</span>
+            {
+              similarWord ? <span>類義語「<button onClick={() => setInput(similarWord)}>{similarWord}</button>」で検索しています</span>
+                : faqs.length !== 0 ? <span>{faqs.length}件の検索結果が見つかりました</span>
+                  : <span>類義語が見つかりませんでした</span>
+            }
+
             <ul>
               {faqs.map(faq => (
-                <li
+                <ResultCard
                   key={faq.question}
-                >
-                  <Link
-                    to={`/pages/${faq.pageTitle}`}
-                    data-test="question-title"
-                  >
-                    {faq.question}
-                  </Link>
-                </li>
+                  to={`/pages/${faq.pageTitle}`}
+                  faq={faq}
+                />
               ))}
+              {faqs.length === 0 && (
+                <Button theme={"primary"}>生成系AIの解答を見る</Button>
+              )}
             </ul>
           </>
         )}
-      </div>
+      </div >
     </>
   );
 }
