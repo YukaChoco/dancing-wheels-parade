@@ -27,12 +27,11 @@ export function TopPage(): JSX.Element {
           ))
           localStorage.setItem("faqs", JSON.stringify(faqs));
           setDefaultFaqs(faqs.slice(0, 5));
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error(error);
         });
-
-      setIsLoading(false);
     })();
   }, []);
 
