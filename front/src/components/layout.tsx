@@ -1,11 +1,11 @@
-import {Outlet} from "react-router-dom";
-import {Header} from "./Header";
+import { Outlet } from "react-router-dom";
+import { Header } from "./Header";
 
 export function Layout(): JSX.Element {
   return (
     <div>
       <Header />
-      <main >
+      <main className="bg-light h-screen pt-20 px-4" >
         <div>
           <Outlet />
         </div>
