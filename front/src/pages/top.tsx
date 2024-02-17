@@ -1,7 +1,9 @@
-import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import wanko from "@/assets/wanko.svg";
-import prompt from "@/assets/prompt.svg";
+import { Button } from "../components/Button";
+import { ResultCard } from "../components/ResultCard";
+import { LoadingModal } from "../components/LoadingModal";
 
 type FAQ = {
   question: string;
@@ -38,59 +40,50 @@ export function TopPage(): JSX.Element {
     setFaqs(filteredFaqs);
   };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
-      <div className="flex flex-col">
-        <div className="flex justify-center">
-          <div className="relative w-96">
-            <img src={wanko} alt="wanko" />
-            <img
-              src={prompt}
-              alt="prompt"
-              className="absolute bottom-2 left-[4rem] md:left-[6rem]"
-            />
-          </div>
+      <LoadingModal isOpen={isLoading} />
+      <div>
+        <div className="pl-4">
+          <img src={wanko} alt="wanko" />
         </div>
-        <div className="flex justify-center">
+        <div>
           <input
             type="text"
             value={input}
             onChange={handleInputChange}
             placeholder="Enter the keyword"
             data-test="search-input"
-            className="w-full sm:w-[36rem] h-12 px-4 py-3 shadow outline-0"
-          ></input>
+            className="w-full p-2"
+          />
         </div>
       </div>
-      <div className="mt-6 px-4 py-6 bg-white h-[calc(100%-12rem)] overflow-scroll shadow">
+      <div className="mt-4">
+        <Button theme="primary">Button</Button>
+      </div>
+      <div>
         {input === "" ? (
           <>
-            <span className="text-[#2B546A] text-base">
+            <span>
               Frequently Asked Questions
             </span>
-            <ul className="pt-4">
+            <ul>
               {defaultFaqs.map(faq => (
-                <li
+                <ResultCard
                   key={faq.question}
-                  className="pl-2 py-2 text-lg text-[#2B546A] list-inside list-square marker:text-[#57D5C1] hover:bg-[#F6F6F7] rounded-md"
-                >
-                  <Link to={`/pages/${faq.pageTitle}`}>{faq.question}</Link>
-                </li>
+                  to={`/pages/${faq.pageTitle}`}
+                  question={faq.question}
+                />
               ))}
             </ul>
           </>
         ) : (
           <>
-            <span className="text-[#2B546A] text-base">{`${faqs.length} questions matched`}</span>
-            <ul className="pt-4">
+            <span>{`${faqs.length} questions matched`}</span>
+            <ul>
               {faqs.map(faq => (
                 <li
                   key={faq.question}
-                  className="pl-2 py-2 text-lg text-[#2B546A] list-inside list-square marker:text-[#57D5C1] hover:bg-[#F6F6F7] rounded-md"
                 >
                   <Link
                     to={`/pages/${faq.pageTitle}`}
