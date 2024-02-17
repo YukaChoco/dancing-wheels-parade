@@ -46,10 +46,8 @@ export function TopPage(): JSX.Element {
   return (
     <>
       <div>
-        <div>
-          <div>
-            <img src={wanko} alt="wanko" />
-          </div>
+        <div className="pl-4">
+          <img src={wanko} alt="wanko" />
         </div>
         <div>
           <input
@@ -58,10 +56,13 @@ export function TopPage(): JSX.Element {
             onChange={handleInputChange}
             placeholder="Enter the keyword"
             data-test="search-input"
+            className="w-full p-2"
           />
         </div>
       </div>
-      <Button theme="primary">Button</Button>
+      <div className="mt-4">
+        <Button theme="primary">Button</Button>
+      </div>
       <div>
         {input === "" ? (
           <>
