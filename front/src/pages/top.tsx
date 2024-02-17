@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import body from "@/assets/body.svg";
 import hand from "@/assets/hand.svg";
-import { Button } from "../components/Button";
 import { ResultCard } from "../components/ResultCard";
 import { LoadingModal } from "../components/LoadingModal";
 
@@ -62,10 +61,7 @@ export function TopPage(): JSX.Element {
           />
         </div>
       </div>
-      <div className="mt-4">
-        <Button theme="primary">Button</Button>
-      </div>
-      <div>
+      <div className="mt-6">
         {input === "" ? (
           <>
             <span>
