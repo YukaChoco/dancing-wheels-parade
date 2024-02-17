@@ -56,9 +56,9 @@ export function TopPage(): JSX.Element {
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="Enter the keyword"
+            placeholder="検索"
             data-test="search-input"
-            className="w-full p-2"
+            className="w-full p-2 px-4 border-dark border-2 drop-shadow-lg rounded-xl"
           />
         </div>
       </div>
