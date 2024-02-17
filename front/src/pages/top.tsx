@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import wanko from "@/assets/wanko.svg";
+import body from "@/assets/body.svg";
+import hand from "@/assets/hand.svg";
 import { Button } from "../components/Button";
 import { ResultCard } from "../components/ResultCard";
 import { LoadingModal } from "../components/LoadingModal";
@@ -44,8 +45,11 @@ export function TopPage(): JSX.Element {
     <>
       <LoadingModal isOpen={isLoading} />
       <div>
-        <div className="pl-4">
-          <img src={wanko} alt="wanko" />
+        <div className="ml-4 w-1/3 relative">
+          <img width="100%" src={body} alt="ninzya_body" />
+          <div className="w-full z-10 absolute top-0">
+            <img width="100%" src={hand} alt="ninzya_hand" />
+          </div>
         </div>
         <div>
           <input
