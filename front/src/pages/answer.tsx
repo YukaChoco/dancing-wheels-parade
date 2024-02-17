@@ -7,7 +7,6 @@ export function AnswerPage(): JSX.Element {
   const { pageTitle } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [lines, setLines] = useState<FetchedPage["descriptions"]>([]);
-  console.log(lines)
   useEffect(() => {
     (async () => {
       axios
