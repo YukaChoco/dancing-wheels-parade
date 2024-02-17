@@ -6,7 +6,7 @@ export function Layout(): JSX.Element {
   return (
     <div>
       <Header />
-      <main className="bg-light h-screen pt-20 px-4" >
+      <main className="bg-light h-screen pt-20 lg:px-24 md:px-12 px-4" >
         <div>
           <Outlet />
         </div>
