@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import wanko from "@/assets/wanko.svg";
 import { Button } from "../components/Button";
 import { ResultCard } from "../components/ResultCard";
+import { LoadingModal } from "../components/LoadingModal";
 
 type FAQ = {
   question: string;
@@ -39,12 +40,9 @@ export function TopPage(): JSX.Element {
     setFaqs(filteredFaqs);
   };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
+      <LoadingModal isOpen={isLoading} />
       <div>
         <div className="pl-4">
           <img src={wanko} alt="wanko" />
