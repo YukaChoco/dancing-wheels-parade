@@ -1,12 +1,10 @@
 import {Outlet} from "react-router-dom";
-import {ImCross} from "react-icons/im";
+import {Header} from "./Header";
 
 export function Layout(): JSX.Element {
   return (
     <div>
-      <header>
-        <ImCross />
-      </header>
+      <Header />
       <main >
         <div>
           <Outlet />
