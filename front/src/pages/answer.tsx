@@ -1,14 +1,15 @@
-import {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { LoadingModal } from "../components/LoadingModal";
 
 type Page = {
-  lines: Array<{id: string; text: string}>;
+  lines: Array<{ id: string; text: string }>;
 };
 
 export function AnswerPage(): JSX.Element {
-  const {pageTitle} = useParams();
+  const { pageTitle } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [lines, setLines] = useState<Array<{id: string; text: string}>>([]);
+  const [lines, setLines] = useState<Array<{ id: string; text: string }>>([]);
   useEffect(() => {
     (async () => {
       const res = await fetch(`/api/pages/${pageTitle}`);
@@ -23,12 +24,9 @@ export function AnswerPage(): JSX.Element {
     })();
   }, [pageTitle]);
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
+      <LoadingModal isOpen={isLoading} />
       <div>
         <h1
           data-test="answer-title"
