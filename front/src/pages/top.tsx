@@ -45,7 +45,7 @@ export function TopPage(): JSX.Element {
     <>
       <LoadingModal isOpen={isLoading} />
       <div>
-        <div className="ml-4 w-1/3 relative">
+        <div className="mx-[5vw] w-1/5 relative">
           <img width="100%" src={body} alt="ninzya_body" />
           <div className="w-full z-10 absolute top-0">
             <img width="100%" src={hand} alt="ninzya_hand" />
