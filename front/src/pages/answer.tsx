@@ -29,24 +29,23 @@ export function AnswerPage(): JSX.Element {
 
   return (
     <>
-      <div className="bg-white lg:max-w-[760px] px-8 py-6 shadow">
+      <div>
         <h1
-          className="border-l-4 border-[#30C8D6] pl-2 text-3xl text-[#2B546A]"
           data-test="answer-title"
         >
           {pageTitle}
         </h1>
-        <div className="mt-4">
+        <div>
           {lines.map(line => (
-            <div key={line.id} className="text-lg text-[#2B546A] leading-9">
+            <div key={line.id}>
               {line.text}
             </div>
           ))}
         </div>
       </div>
-      <div className="lg:max-w-[760px] mt-8 md:mt-14 flex justify-center">
-        <button className="px-10 py-5 bg-[#57D5C1]">
-          <Link to="/" className="text-white">
+      <div>
+        <button>
+          <Link to="/">
             &lt; Return to Top Page
           </Link>
         </button>
