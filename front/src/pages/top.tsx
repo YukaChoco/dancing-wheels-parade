@@ -44,39 +44,36 @@ export function TopPage(): JSX.Element {
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="flex justify-center">
-          <div className="relative w-96">
+      <div>
+        <div>
+          <div>
             <img src={wanko} alt="wanko" />
             <img
               src={prompt}
               alt="prompt"
-              className="absolute bottom-2 left-[4rem] md:left-[6rem]"
             />
           </div>
         </div>
-        <div className="flex justify-center">
+        <div>
           <input
             type="text"
             value={input}
             onChange={handleInputChange}
             placeholder="Enter the keyword"
             data-test="search-input"
-            className="w-full sm:w-[36rem] h-12 px-4 py-3 shadow outline-0"
-          ></input>
+          />
         </div>
       </div>
-      <div className="mt-6 px-4 py-6 bg-white h-[calc(100%-12rem)] overflow-scroll shadow">
+      <div>
         {input === "" ? (
           <>
-            <span className="text-[#2B546A] text-base">
+            <span>
               Frequently Asked Questions
             </span>
-            <ul className="pt-4">
+            <ul>
               {defaultFaqs.map(faq => (
                 <li
                   key={faq.question}
-                  className="pl-2 py-2 text-lg text-[#2B546A] list-inside list-square marker:text-[#57D5C1] hover:bg-[#F6F6F7] rounded-md"
                 >
                   <Link to={`/pages/${faq.pageTitle}`}>{faq.question}</Link>
                 </li>
@@ -85,12 +82,11 @@ export function TopPage(): JSX.Element {
           </>
         ) : (
           <>
-            <span className="text-[#2B546A] text-base">{`${faqs.length} questions matched`}</span>
-            <ul className="pt-4">
+            <span>{`${faqs.length} questions matched`}</span>
+            <ul>
               {faqs.map(faq => (
                 <li
                   key={faq.question}
-                  className="pl-2 py-2 text-lg text-[#2B546A] list-inside list-square marker:text-[#57D5C1] hover:bg-[#F6F6F7] rounded-md"
                 >
                   <Link
                     to={`/pages/${faq.pageTitle}`}
