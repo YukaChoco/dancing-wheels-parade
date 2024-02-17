@@ -1,6 +1,8 @@
-import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import wanko from "@/assets/wanko.svg";
+import { Button } from "../components/Button";
+import { ResultCard } from "../components/ResultCard";
 
 type FAQ = {
   question: string;
@@ -59,6 +61,7 @@ export function TopPage(): JSX.Element {
           />
         </div>
       </div>
+      <Button theme="primary">Button</Button>
       <div>
         {input === "" ? (
           <>
@@ -67,11 +70,11 @@ export function TopPage(): JSX.Element {
             </span>
             <ul>
               {defaultFaqs.map(faq => (
-                <li
+                <ResultCard
                   key={faq.question}
-                >
-                  <Link to={`/pages/${faq.pageTitle}`}>{faq.question}</Link>
-                </li>
+                  to={`/pages/${faq.pageTitle}`}
+                  question={faq.question}
+                />
               ))}
             </ul>
           </>
