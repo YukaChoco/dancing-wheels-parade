@@ -30,6 +30,7 @@
 
     ```:console
     npm run watch:api
+    npm run watch:front
     ```
 
 Then Web and API server will start on the following ports.
