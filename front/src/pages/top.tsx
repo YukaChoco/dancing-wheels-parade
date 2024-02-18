@@ -6,6 +6,7 @@ import { LoadingModal } from "../components/LoadingModal";
 import { Button } from "../components/Button";
 import type { FAQ, FetchedFAQs, FetchedSimilarWords } from "../types/FAQ";
 import axios from 'axios';
+import { useDebounce } from 'use-debounce';
 
 export function TopPage(): JSX.Element {
   const [input, setInput] = useState("");
@@ -14,6 +15,8 @@ export function TopPage(): JSX.Element {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [defaultFaqs, setDefaultFaqs] = useState<FAQ[]>([]);
   const [similarWords, setSimilarWords] = useState<string[]>([]);
+
+  const [value] = useDebounce(input, 2000);
   // console.log(keyWords);
 
   useEffect(() => {
@@ -51,7 +54,6 @@ export function TopPage(): JSX.Element {
   }
 
   useEffect(() => {
-    console.log('hogee')
     setIsSearching(true);
     if (input === "") {
       setFaqs([]);
@@ -88,7 +90,7 @@ export function TopPage(): JSX.Element {
         })();
       }
     }
-  }, [input]);
+  }, [value]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(e.target.value);
