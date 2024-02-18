@@ -1,26 +1,38 @@
-import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
-import wanko from "@/assets/wanko.svg";
-import prompt from "@/assets/prompt.svg";
-
-type FAQ = {
-  question: string;
-  pageTitle: string;
-};
+import { useEffect, useState } from "react";
+import body from "@/assets/body.svg";
+import hand from "@/assets/hand.svg";
+import { ResultCard } from "../components/ResultCard";
+import { LoadingModal } from "../components/LoadingModal";
+import { Button } from "../components/Button";
+import type { FAQ, FetchedFAQs } from "../types/FAQ";
+import axios from 'axios';
 
 export function TopPage(): JSX.Element {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [defaultFaqs, setDefaultFaqs] = useState<FAQ[]>([]);
+  const similarWord: string | null = null;
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("/api/faqs");
-      const faqs = await res.json();
-      localStorage.setItem("faqs", JSON.stringify(faqs));
-      setDefaultFaqs(faqs.slice(0, 5));
-      setIsLoading(false);
+      axios
+        .get<FetchedFAQs[]>("https://faq-odoshari-api.onrender.com/api/faqs")
+        .then((results) => {
+          const resFaqs = results.data;
+          const faqs = resFaqs.flatMap((faq) => (
+            faq.questions.map((question) => ({
+              question: question,
+              pageTitle: faq.page_title,
+            }))
+          ))
+          localStorage.setItem("faqs", JSON.stringify(faqs));
+          setDefaultFaqs(faqs.slice(0, 5));
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     })();
   }, []);
 
@@ -38,69 +50,65 @@ export function TopPage(): JSX.Element {
     setFaqs(filteredFaqs);
   };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
-      <div className="flex flex-col">
-        <div className="flex justify-center">
-          <div className="relative w-96">
-            <img src={wanko} alt="wanko" />
-            <img
-              src={prompt}
-              alt="prompt"
-              className="absolute bottom-2 left-[4rem] md:left-[6rem]"
-            />
+      <LoadingModal isOpen={isLoading} />
+      <div>
+        <div className="mx-[5vw] w-1/5 relative">
+          <img width="100%" src={body} alt="ninzya_body" />
+          <div className="w-full z-10 absolute top-0">
+            <img width="100%" src={hand} alt="ninzya_hand" />
           </div>
         </div>
-        <div className="flex justify-center">
+        <div>
           <input
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="Enter the keyword"
+            placeholder="検索"
             data-test="search-input"
-            className="w-full sm:w-[36rem] h-12 px-4 py-3 shadow outline-0"
-          ></input>
+            className="w-full p-4 px-6 border-dark/80 border-4 drop-shadow-lg rounded-xl focus:outline-0 focus:border-dark focus:drop-shadow-xl"
+          />
         </div>
       </div>
-      <div className="mt-6 px-4 py-6 bg-white h-[calc(100%-12rem)] overflow-scroll shadow">
+      <div className="mt-6">
         {input === "" ? (
           <>
-            <span className="text-[#2B546A] text-base">
-              Frequently Asked Questions
-            </span>
-            <ul className="pt-4">
-              {defaultFaqs.map(faq => (
+            <span>よくある質問</span>
+            <ul>
+              {defaultFaqs.map((faq, index) => (
                 <li
-                  key={faq.question}
-                  className="pl-2 py-2 text-lg text-[#2B546A] list-inside list-square marker:text-[#57D5C1] hover:bg-[#F6F6F7] rounded-md"
+                  key={index}
                 >
-                  <Link to={`/pages/${faq.pageTitle}`}>{faq.question}</Link>
+                  <ResultCard
+                    to={`/pages/${faq.pageTitle}`}
+                    faq={faq}
+                  />
                 </li>
               ))}
             </ul>
           </>
         ) : (
           <>
-            <span className="text-[#2B546A] text-base">{`${faqs.length} questions matched`}</span>
-            <ul className="pt-4">
+            {
+              similarWord ? <span>類義語「<button onClick={() => setInput(similarWord)}>{similarWord}</button>」で検索しています</span>
+                : faqs.length !== 0 ? <span>{faqs.length}件の検索結果が見つかりました</span>
+                  : <span>類義語が見つかりませんでした</span>
+            }
+
+            <ul>
               {faqs.map(faq => (
-                <li
+                <ResultCard
                   key={faq.question}
-                  className="pl-2 py-2 text-lg text-[#2B546A] list-inside list-square marker:text-[#57D5C1] hover:bg-[#F6F6F7] rounded-md"
-                >
-                  <Link
-                    to={`/pages/${faq.pageTitle}`}
-                    data-test="question-title"
-                  >
-                    {faq.question}
-                  </Link>
-                </li>
+                  to={`/pages/${faq.pageTitle}`}
+                  faq={faq}
+                />
               ))}
             </ul>
+
+            {faqs.length === 0 && (
+              <Button theme={"primary"} link={`/gpt/${input}`}>生成系AIの解答を見る</Button>
+            )}
           </>
         )}
       </div>

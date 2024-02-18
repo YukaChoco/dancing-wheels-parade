@@ -47,3 +47,4 @@ To update the FAQs, execute the following command after updating the page in the
 ```:console
 npm run generate
 ```
+readme

@@ -5,18 +5,17 @@ import type { FetchedPage } from "../types/Page";
 import axios from 'axios';
 import { Button } from "../components/Button";
 
-export function AnswerPage(): JSX.Element {
-  const { pageTitle } = useParams();
+export function ChatGptPage(): JSX.Element {
+  const { searchQuery } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [lines, setLines] = useState<FetchedPage["descriptions"]>([]);
+  const [page, setPage] = useState<FetchedPage>({ page_title: '', descriptions: [''] });
   useEffect(() => {
     (async () => {
       axios
-        .get<FetchedPage>(`https://faq-odoshari-api.onrender.com/api/pages/${pageTitle}`)
+        .get<FetchedPage>(`https://faq-odoshari-api.onrender.com/api/gpt4/${searchQuery}`)
         .then((results) => {
           const resPage = results.data;
-          const lines = resPage.descriptions;
-          setLines(lines);
+          setPage(resPage);
           setIsLoading(false);
         })
         .catch((error) => {
@@ -24,7 +23,7 @@ export function AnswerPage(): JSX.Element {
           setIsLoading(false);
         });
     })();
-  }, [pageTitle]);
+  }, [searchQuery]);
 
   return (
     <>
@@ -34,10 +33,10 @@ export function AnswerPage(): JSX.Element {
           data-test="answer-title"
           className="font-bold text-2xl text-center my-8"
         >
-          {pageTitle}
+          {page.page_title}
         </h1>
         <div className="my-12 p-4 py-8 bg-white/40 rounded-xl text-lg flex flex-col gap-2">
-          {lines.map((line, index) => (
+          {page.descriptions.map((line, index) => (
             <div key={index}>
               {line}
             </div>
