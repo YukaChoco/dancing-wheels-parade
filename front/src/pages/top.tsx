@@ -17,7 +17,6 @@ export function TopPage(): JSX.Element {
   const [similarWords, setSimilarWords] = useState<string[]>([]);
 
   const [value] = useDebounce(input, 2000);
-  // console.log(keyWords);
 
   useEffect(() => {
     (async () => {
@@ -45,7 +44,6 @@ export function TopPage(): JSX.Element {
   const searchFaqs = (keyWords: string[]) => {
     const faqs = JSON.parse(localStorage.getItem("faqs")!);
     const filteredFaqs: FAQ[] = faqs.filter((faq: FAQ) => {
-      // すべてのキーワードが質問に含まれているかどうかを確認
       return keyWords.some(keyword =>
         faq.question.toLowerCase().includes(keyword.toLowerCase())
       );
@@ -72,13 +70,11 @@ export function TopPage(): JSX.Element {
               const res = results.data;
               const fetchedSimilarWords = res.similar_words;
               setSimilarWords(fetchedSimilarWords);
-              console.log(fetchedSimilarWords)
               if (fetchedSimilarWords.length === 0) {
                 setFaqs([]);
                 setIsSearching(false);
               } else {
                 const filteredFaqs = searchFaqs(fetchedSimilarWords);
-                console.log(filteredFaqs)
                 setFaqs(filteredFaqs);
                 setIsSearching(false);
               }
@@ -141,7 +137,13 @@ export function TopPage(): JSX.Element {
                 : similarWords.length !== 0 ? (
                   <span>
                     類義語 {
-                      similarWords.map(word => <button onClick={() => setInput(word)}>{word}</button>)
+                      similarWords.map(word => <button
+                        onClick={() => setInput(word)}
+                        className="px-1 mx-2 border-2 rounded border-dark hover:bg-dark"
+                      >
+                        {word}
+                      </button>
+                      )
                     } で検索しています
                   </span>
                 )
