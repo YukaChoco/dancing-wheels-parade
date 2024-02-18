@@ -3,7 +3,7 @@ import './Header.css';
 
 export function Header(): JSX.Element {
   return (
-    <header className="fixed top-0 w-screen bg-dark py-2 px-6 text-light font-bold z-10">
+    <header className="fixed top-0 w-screen bg-dark py-2 px-6 text-light font-bold z-20">
 
        <Link to={'/'}> <span className="text-3xl font-consolas text-shadow pr-4 text-shadow">TAXMAN</span>
        </Link>

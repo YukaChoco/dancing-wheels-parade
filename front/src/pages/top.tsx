@@ -4,15 +4,19 @@ import hand from "@/assets/hand.svg";
 import { ResultCard } from "../components/ResultCard";
 import { LoadingModal } from "../components/LoadingModal";
 import { Button } from "../components/Button";
-import type { FAQ, FetchedFAQs } from "../types/FAQ";
+import type { FAQ, FetchedFAQs, FetchedSimilarWords } from "../types/FAQ";
 import axios from 'axios';
+import { useDebounce } from 'use-debounce';
 
 export function TopPage(): JSX.Element {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isSearching, setIsSearching] = useState(true);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [defaultFaqs, setDefaultFaqs] = useState<FAQ[]>([]);
-  const similarWord: string | null = null;
+  const [similarWords, setSimilarWords] = useState<string[]>([]);
+
+  const [value] = useDebounce(input, 2000);
 
   useEffect(() => {
     (async () => {
@@ -32,22 +36,60 @@ export function TopPage(): JSX.Element {
         })
         .catch((error) => {
           console.error(error);
+          setIsLoading(false);
         });
     })();
   }, []);
 
+  const searchFaqs = (keyWords: string[]) => {
+    const faqs = JSON.parse(localStorage.getItem("faqs")!);
+    const filteredFaqs: FAQ[] = faqs.filter((faq: FAQ) => {
+      return keyWords.some(keyword =>
+        faq.question.toLowerCase().includes(keyword.toLowerCase())
+      );
+    });
+    return filteredFaqs
+  }
+
+  useEffect(() => {
+    setIsSearching(true);
+    if (input === "") {
+      setFaqs([]);
+      setIsSearching(false);
+    } else {
+      const filteredFaqs = searchFaqs([input]);
+
+      if (filteredFaqs.length !== 0) {
+        setFaqs(filteredFaqs);
+        setIsSearching(false);
+      } else {
+        (async () => {
+          axios
+            .get<FetchedSimilarWords>(`https://faq-odoshari-api.onrender.com/api/synonyms/${input}`)
+            .then((results) => {
+              const res = results.data;
+              const fetchedSimilarWords = res.similar_words;
+              setSimilarWords(fetchedSimilarWords);
+              if (fetchedSimilarWords.length === 0) {
+                setFaqs([]);
+                setIsSearching(false);
+              } else {
+                const filteredFaqs = searchFaqs(fetchedSimilarWords);
+                setFaqs(filteredFaqs);
+                setIsSearching(false);
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              setIsSearching(false);
+            });
+        })();
+      }
+    }
+  }, [value]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(e.target.value);
-    if (e.target.value === "") {
-      setFaqs([]);
-      return;
-    }
-
-    const faqs = JSON.parse(localStorage.getItem("faqs")!);
-    const filteredFaqs = faqs.filter((faq: FAQ) =>
-      faq.question.toLowerCase().includes(e.target.value.toLowerCase()),
-    );
-    setFaqs(filteredFaqs);
   };
 
   return (
@@ -91,9 +133,22 @@ export function TopPage(): JSX.Element {
         ) : (
           <>
             {
-              similarWord ? <span>類義語「<button onClick={() => setInput(similarWord)}>{similarWord}</button>」で検索しています</span>
-                : faqs.length !== 0 ? <span>{faqs.length}件の検索結果が見つかりました</span>
-                  : <span>類義語が見つかりませんでした</span>
+              isSearching ? <span>検索中です...</span>
+                : similarWords.length !== 0 ? (
+                  <span>
+                    類義語 {
+                      similarWords.map(word => <button
+                        onClick={() => setInput(word)}
+                        className="px-1 mx-2 border-2 rounded border-dark hover:bg-dark"
+                      >
+                        {word}
+                      </button>
+                      )
+                    } で検索しています
+                  </span>
+                )
+                  : faqs.length !== 0 ? <span>{faqs.length}件の検索結果が見つかりました</span>
+                    : <span>類義語が見つかりませんでした</span>
             }
 
             <ul>
@@ -106,7 +161,7 @@ export function TopPage(): JSX.Element {
               ))}
             </ul>
 
-            {faqs.length === 0 && (
+            {(faqs.length === 0 && !isSearching) && (
               <Button theme={"primary"} link={`/gpt/${input}`}>生成系AIの解答を見る</Button>
             )}
           </>
