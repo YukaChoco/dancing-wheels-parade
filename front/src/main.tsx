@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import {RouterProvider, createBrowserRouter} from "react-router-dom";
 import {TopPage} from "./pages/top.tsx";
 import {AnswerPage} from "./pages/answer.tsx";
+import {ChatGptPage} from "./pages/chatGpt.tsx";
 import {Layout} from "./components/layout.tsx";
 import "./index.css";
 
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/pages/:pageTitle",
         element: <AnswerPage />,
+      },
+      {
+        path: "/gpt/:searchQuery",
+        element: <ChatGptPage />,
       },
     ],
   },
