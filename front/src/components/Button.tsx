@@ -5,7 +5,7 @@ export function Button({ theme, children, link }: { theme: "primary" | "secondar
   const colors = theme === "primary"
     ? "bg-dark text-light"
     : "bg-light text-dark";
-  const styles = `${colors} w-full p-4 text-xl rounded-xl`
+  const styles = `${colors} w-full p-4 text-xl rounded-xl border-4 border-primary drop-shadow-xl font-bold text-light`
   return (
     <Link to={link}>
       <div className="w-full text-center p-6 px-6 md:px-24 fixed bottom-10 left-0 z-10">

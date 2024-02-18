@@ -6,6 +6,7 @@ module.exports = {
       primary: '#FFE3B2',
       dark: '#FAA81A',
       light: '#FEF0D7',
+      white: '#FFF',
     },
     screens: {
       sm: "380px",
