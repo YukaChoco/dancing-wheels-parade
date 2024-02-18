@@ -29,13 +29,14 @@ export function AnswerPage(): JSX.Element {
   return (
     <>
       <LoadingModal isOpen={isLoading} />
-      <div>
+      <div className="mb-24">
         <h1
           data-test="answer-title"
+          className="font-bold text-2xl text-center my-8"
         >
           {pageTitle}
         </h1>
-        <div>
+        <div className="my-12 p-4 py-8 bg-white/40 rounded-xl text-lg flex flex-col gap-2">
           {lines.map((line, index) => (
             <div key={index}>
               {line}
