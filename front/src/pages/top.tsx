@@ -4,11 +4,8 @@ import hand from "@/assets/hand.svg";
 import { ResultCard } from "../components/ResultCard";
 import { LoadingModal } from "../components/LoadingModal";
 import { Button } from "../components/Button";
-
-type FAQ = {
-  question: string;
-  pageTitle: string;
-};
+import type { FAQ, FetchedFAQs } from "../types/FAQ";
+import axios from 'axios';
 
 export function TopPage(): JSX.Element {
   const [input, setInput] = useState("");
@@ -19,11 +16,23 @@ export function TopPage(): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("/api/faqs");
-      const faqs = await res.json();
-      localStorage.setItem("faqs", JSON.stringify(faqs));
-      setDefaultFaqs(faqs.slice(0, 5));
-      setIsLoading(false);
+      axios
+        .get<FetchedFAQs[]>("https://faq-odoshari-api.onrender.com/api/faqs")
+        .then((results) => {
+          const resFaqs = results.data;
+          const faqs = resFaqs.flatMap((faq) => (
+            faq.questions.map((question) => ({
+              question: question,
+              pageTitle: faq.page_title,
+            }))
+          ))
+          localStorage.setItem("faqs", JSON.stringify(faqs));
+          setDefaultFaqs(faqs.slice(0, 5));
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     })();
   }, []);
 
@@ -67,12 +76,15 @@ export function TopPage(): JSX.Element {
           <>
             <span>よくある質問</span>
             <ul>
-              {defaultFaqs.map(faq => (
-                <ResultCard
-                  key={faq.question}
-                  to={`/pages/${faq.pageTitle}`}
-                  faq={faq}
-                />
+              {defaultFaqs.map((faq, index) => (
+                <li
+                  key={index}
+                >
+                  <ResultCard
+                    to={`/pages/${faq.pageTitle}`}
+                    faq={faq}
+                  />
+                </li>
               ))}
             </ul>
           </>
