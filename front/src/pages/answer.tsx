@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { LoadingModal } from "../components/LoadingModal";
 import type { FetchedPage } from "../types/Page";
 import axios from 'axios';
 
@@ -24,12 +25,9 @@ export function AnswerPage(): JSX.Element {
     })();
   }, [pageTitle]);
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
+      <LoadingModal isOpen={isLoading} />
       <div>
         <h1
           data-test="answer-title"
