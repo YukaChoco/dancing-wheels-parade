@@ -104,13 +104,14 @@ export function TopPage(): JSX.Element {
                   faq={faq}
                 />
               ))}
-              {faqs.length === 0 && (
-                <Button theme={"primary"}>生成系AIの解答を見る</Button>
-              )}
             </ul>
+
+            {faqs.length === 0 && (
+              <Button theme={"primary"} link={`/gpt/${input}`}>生成系AIの解答を見る</Button>
+            )}
           </>
         )}
-      </div >
+      </div>
     </>
   );
 }
