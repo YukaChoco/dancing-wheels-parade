@@ -67,7 +67,7 @@ export function TopPage(): JSX.Element {
             onChange={handleInputChange}
             placeholder="検索"
             data-test="search-input"
-            className="w-full p-2 px-4 border-dark border-2 drop-shadow-lg rounded-xl"
+            className="w-full p-4 px-6 border-dark/80 border-4 drop-shadow-lg rounded-xl focus:outline-0 focus:border-dark focus:drop-shadow-xl"
           />
         </div>
       </div>
