@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { LoadingModal } from "../components/LoadingModal";
 import type { FetchedPage } from "../types/Page";
 import axios from 'axios';
+import { Button } from "../components/Button";
 
 export function AnswerPage(): JSX.Element {
   const { pageTitle } = useParams();
@@ -42,13 +43,7 @@ export function AnswerPage(): JSX.Element {
           ))}
         </div>
       </div>
-      <div>
-        <button>
-          <Link to="/">
-            &lt; Return to Top Page
-          </Link>
-        </button>
-      </div>
+      <Button theme={"primary"} link={"/"}>検索画面に戻る</Button>
     </>
   );
 }
